@@ -1,3 +1,5 @@
+package game;
+
 public interface Game<Move> {
   void move(String player, Move move);
   void start();
