@@ -2,16 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2db5edad-afda-402c-995a-06bc8b740263" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/SceneBuilder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/SceneObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/data/animation/Animation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/CoinRouletteRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonCollection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonKeyValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonNumber.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonString.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/data/json/JsonValue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CoinRoulette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/CoinRoulette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/Renderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/SceneObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/SceneObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/animation/Animation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/animation/Animation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +69,7 @@
       <option name="presentableId" value="Default" />
       <updated>1647484215523</updated>
       <workItem from="1647484909465" duration="1032000" />
-      <workItem from="1647568671839" duration="2691000" />
+      <workItem from="1647568671839" duration="7911000" />
     </task>
     <servers />
   </component>

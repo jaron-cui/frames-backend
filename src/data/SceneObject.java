@@ -1,9 +1,13 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SceneObject {
   private final String id;
   private int x, y;
   private double theta;
+  private List<String> actionQueue;
 
   public SceneObject(String id) {
     this(id, 0, 0);
@@ -18,6 +22,8 @@ public class SceneObject {
     this.x = x;
     this.y = y;
     this.theta = theta;
+    this.actionQueue = new ArrayList<>();
+    this.actionQueue.add("{type:create,}");
   }
 
   public boolean deleted() {

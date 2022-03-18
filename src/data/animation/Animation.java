@@ -1,5 +1,8 @@
 package data.animation;
 
+import data.json.JsonKeyValue;
+import data.json.JsonSet;
+
 public class Animation {
   private final Easing easing;
   private final double duration;
@@ -19,7 +22,10 @@ public class Animation {
 
   @Override
   public String toString() {
-    return "{type:" + this.easing() + ",duration:" + Double.toString(this.duration()) + "}";
+    JsonSet json = new JsonSet(
+        new JsonKeyValue("type", this.easing().toString()),
+        new JsonKeyValue("duration", this.duration()));
+    return json.toString();
   }
 
   public enum Easing {
