@@ -6,14 +6,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Controller {
-  public static void main(String[] args) {
-    HttpServer server;
-    try {
-      server = HttpServer.create(new InetSocketAddress("localhost", 8000), 0);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return;
-    }
+  public static void main(String[] args) throws IOException {
+    HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8000), 0);
+
     server.createContext("/test", new RequestHandler());
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
     server.setExecutor(threadPoolExecutor);
