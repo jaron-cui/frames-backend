@@ -5,21 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2db5edad-afda-402c-995a-06bc8b740263" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/Message.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/MessageHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/Response.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/WebSocketConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/wrapper.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/Board.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/Chess.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/ChessMove.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/piece/MoveSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/piece/Pawn.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/chess/piece/Piece.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frog-games.iml" beforeDir="false" afterPath="$PROJECT_DIR$/frog-games.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/frames/frames/FramesApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/frames/frames/FramesApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/frames/frames/FramesApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/frames/frames/FramesApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/CoinRoulette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/CoinRoulette.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +69,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -82,17 +85,6 @@
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
   </component>
   <component name="RunManager" selected="Application.Controller">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Controller" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Controller" />
       <module name="frog-games" />
@@ -125,6 +117,9 @@
       <workItem from="1647568671839" duration="9261000" />
       <workItem from="1647619114125" duration="4952000" />
       <workItem from="1647904600480" duration="2666000" />
+      <workItem from="1648515464942" duration="212000" />
+      <workItem from="1648515693166" duration="11600000" />
+      <workItem from="1649026361110" duration="371000" />
     </task>
     <servers />
   </component>
@@ -141,5 +136,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

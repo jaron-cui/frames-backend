@@ -55,7 +55,7 @@ public class CoinRoulette implements Game<Object> {
 
   @Override
   public boolean isOver() {
-    return !this.getWinner().equals(null);
+    return this.getWinner() != null;
   }
 
   @Override
