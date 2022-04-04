@@ -3,7 +3,6 @@ package game.chess;
 import game.Game;
 
 public class Chess implements Game<ChessMove> {
-
   public Chess() {
 
   }
