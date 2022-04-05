@@ -39,4 +39,12 @@ public class Pawn extends Piece {
 
     return positions;
   }
+
+  @Override
+  public Set<Position> conditionalMoves() {
+    Set<Position> positions = new HashSet<>();
+    positions.add(this.getRelativePosition(-1, 1));
+    positions.add(this.getRelativePosition(1, 1));
+    return positions;
+  }
 }

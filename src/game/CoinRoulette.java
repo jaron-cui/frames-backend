@@ -1,12 +1,14 @@
 package game;
 
+import game.common.message.PlayerMove;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class CoinRoulette implements Game<Object> {
+public class CoinRoulette extends Game<PlayerMove> {
   private Set<String> players;
   private Map<String, Integer> scores;
   private final int winMin, winBy;
@@ -14,6 +16,7 @@ public class CoinRoulette implements Game<Object> {
   private boolean inProgress;
 
   public CoinRoulette(int winMin, int winBy, String... players) {
+    super(PlayerMove.class);
     this.players = new HashSet<>(Arrays.asList(players));
     this.winMin = winMin;
     this.winBy = winBy;
@@ -22,11 +25,12 @@ public class CoinRoulette implements Game<Object> {
   }
 
   @Override
-  public void move(String player, Object o) {
+  public void onMessage(PlayerMove move) {
     if (!this.inProgress() || this.isOver()) {
       return;
     }
 
+    String player = move.getPlayer();
     if (random.nextBoolean() && this.players.contains(player)) {
       this.scores.put(player, this.scores.get(player) + 1);
       if (this.isOver()) {

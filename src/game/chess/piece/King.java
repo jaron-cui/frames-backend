@@ -6,7 +6,7 @@ import game.chess.Position;
 import java.util.Set;
 
 public class King extends Enumerated {
-  protected King(Board board, Color color, Position position) {
+  public King(Board board, Color color, Position position) {
     super(board, color, position);
   }
 

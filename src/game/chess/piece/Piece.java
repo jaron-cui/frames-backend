@@ -3,6 +3,7 @@ package game.chess.piece;
 import game.chess.Board;
 import game.chess.Position;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Piece {
@@ -24,8 +25,16 @@ public abstract class Piece {
 
   public abstract Set<Position> possibleMoves();
 
+  public Set<Position> conditionalMoves() {
+    return new HashSet<>();
+  }
+
   public Color getColor() {
     return this.color;
+  }
+
+  public Position getPosition() {
+    return this.position;
   }
 
   protected Position getRelativePosition(int horizontal, int vertical) {
@@ -45,5 +54,10 @@ public abstract class Piece {
     }
     Piece piece = this.board.getPieceAt(position);
     return piece != null && piece.getColor() != this.color;
+  }
+
+  public void moveTo(Position to) {
+    this.moved = true;
+    this.position = to;
   }
 }
