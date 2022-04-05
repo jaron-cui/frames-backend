@@ -70,7 +70,7 @@ public class Model extends Game<Move> {
   public void onMessage(Move move) {
     // TODO: check for check
     Color playerColor = move.getColor();
-    
+
 
     Position from = move.getFrom();
     Position to = move.getTo();
