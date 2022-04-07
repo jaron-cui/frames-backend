@@ -19,18 +19,27 @@ public class Board {
   private final Map<Piece.Color, Set<Piece>> colorPieces;
   private King whiteKing;
   private King blackKing;
+  private final PositionCache updateTracker;
+  private final Map<Piece.Color, PositionCache> possibleMoves;
+  private Piece.Color checkmate;
 
   public Board() {
     this.board = new Piece[8][8];
     this.pieces = new HashSet<>();
     this.colorPieces = new HashMap<>();
+    this.updateTracker = new PositionCache();
+    this.possibleMoves = new HashMap<>();
     this.setBoard();
+    for (Piece piece : this.pieces) {
+      this.updateCacheFor(piece);
+    }
   }
 
   public void setBoard() {
     this.clearBoard();
     this.setSide(Piece.Color.WHITE);
     this.setSide(Piece.Color.BLACK);
+    this.checkmate = null;
   }
 
   private void setSide(Piece.Color color) {
@@ -57,7 +66,7 @@ public class Board {
     }
 
     for (Piece piece : pieces) {
-      this.putPiece(piece);
+      this.addPiece(piece);
     }
 
     this.pieces.addAll(pieces);
@@ -70,37 +79,159 @@ public class Board {
     }
   }
 
+  public void updateCacheFor(Piece piece) {
+    Set<Position> possibleMoves = piece.possibleMoves();
+    Set<Position> updateRange = piece.conditionalMoves();
+    updateRange.addAll(possibleMoves);
+    this.updateTracker.setPositions(piece, updateRange);
+    this.possibleMoves.get(piece.getColor()).setPositions(piece, possibleMoves);
+  }
+
+  public void updatePosition(Position position) {
+    for (Piece obstructed : this.updateTracker.getAssociatedPieces(position)) {
+      this.updateCacheFor(obstructed);
+    }
+  }
+
   public void clearBoard() {
     for (int y = 0; y < 8; y += 1) {
       for (int x = 0; x < 8; x += 1) {
         this.board[y][x] = null;
       }
     }
+    for (Piece piece : this.pieces) {
+      this.updateTracker.removePiece(piece);
+      this.possibleMoves.get(piece.getColor()).removePiece(piece);
+    }
     this.pieces.clear();
+    this.colorPieces.get(Piece.Color.WHITE).clear();
+    this.colorPieces.get(Piece.Color.BLACK).clear();
   }
 
-  public void putPiece(Piece piece) {
+  private void addPiece(Piece piece) {
     Position position = piece.getPosition();
     if (!position.isInBounds()) {
       throw new IllegalArgumentException("Piece is out of bounds.");
     }
 
     this.board[position.y][position.x] = piece;
+    this.pieces.add(piece);
+    this.colorPieces.get(piece.getColor()).add(piece);
+    this.updateCacheFor(piece);
+    this.updatePosition(position);
   }
 
-  public Piece movePiece(Piece piece, Position to) {
+  private void removePiece(Piece piece) {
+    Position position = piece.getPosition();
+    this.board[position.y][position.x] = null;
+    this.updateTracker.removePiece(piece);
+    this.possibleMoves.get(piece.getColor()).removePiece(piece);
+    this.pieces.remove(piece);
+    this.colorPieces.get(piece.getColor()).remove(piece);
+    this.updatePosition(position);
+  }
+
+  public boolean isInCheck(Piece.Color color) {
+    return !this.possibleMoves.get(color.other())
+        .getAssociatedPieces(this.getKing(color).getPosition()).isEmpty();
+  }
+
+  // check all of the king's possible moves
+  // if else, if only 1 attacker, check all possible move positions
+  // for possible interference
+  // if multiple attackers and king is immobilized, then checkmate!
+  private Set<Position> getKingEscapePositions(Piece.Color color) {
+    King king = this.getKing(color);
+    Set<Position> positions = new HashSet<>();
+    for (Position position : this.possibleMoves.get(color).getPositions(king)) {
+      Position from = king.getPosition();
+      Piece displaced = this.movePiece(king, position);
+      if (!this.isInCheck(color)) {
+        positions.add(position);
+      }
+
+      this.movePiece(king, from);
+      if (displaced != null) {
+        this.addPiece(displaced);
+      }
+    }
+
+    return positions;
+  }
+
+  private Map<Piece, Set<Position>> getKingSavingMoves(Piece.Color color) {
+    King king = this.getKing(color);
+    PositionCache enemyMoves = this.possibleMoves.get(color.other());
+    Set<Piece> attackers = enemyMoves.getAssociatedPieces(king.getPosition());
+
+    Map<Piece, Set<Position>> moves = new HashMap<>();
+    Set<Position> kingMoves = this.getKingEscapePositions(color);
+    if (!kingMoves.isEmpty()) {
+      moves.put(king, kingMoves);
+    }
+    // I cannot think of a situation where there is more than one attacker on the king and
+    // the king cannot move out of check where another piece can prevent all incoming attacks
+    if (attackers.size() > 1) {
+      return moves;
+    }
+
+    // search for positions which can prevent checkmate by blocking the attacker while not exposing
+    // another
+    Piece attacker = attackers.stream().iterator().next();
+    Set<Position> lineOfFire = enemyMoves.getPositions(attacker);
+    lineOfFire.add(attacker.getPosition());
+    for (Position point : lineOfFire) {
+      Set<Piece> saviors = this.possibleMoves.get(color).getAssociatedPieces(point);
+      for (Piece savior : saviors) {
+        Position from = savior.getPosition();
+        Piece victim = this.movePiece(savior, point);
+        if (!this.isInCheck(color)) {
+          moves.putIfAbsent(savior, new HashSet<>());
+          moves.get(savior).add(point);
+        }
+        this.movePiece(savior, from);
+        if (victim != null) {
+          this.addPiece(victim);
+        }
+      }
+    }
+
+    return moves;
+  }
+
+  public Piece makeMove(Piece piece, Position to) {
     if (!to.isInBounds()) {
       throw new IllegalArgumentException("Destination is out of bounds.");
     }
 
+    Piece.Color color = piece.getColor();
+
+    Map<Piece, Set<Position>> legalMoves;
+    if (this.isInCheck(color)) {
+      legalMoves = this.getKingSavingMoves(color);
+    } else {
+      // TODO: cull illegal moves
+      legalMoves = this.possibleMoves.get(color).getPositionMap();
+    }
+
+    if (legalMoves.get(piece).contains(to)) {
+      if (this.isInCheck(color.other()) && this.getKingSavingMoves(color.other()).isEmpty()) {
+        this.checkmate = color.other();
+      }
+      return this.movePiece(piece, to);
+    } else {
+      throw new IllegalArgumentException("Illegal move.");
+    }
+  }
+
+  private Piece movePiece(Piece piece, Position to) {
     Piece victim = this.getPieceAt(to);
     if (victim != null) {
-      this.pieces.remove(victim);
-      this.colorPieces.get(victim.getColor()).remove(victim);
+      this.removePiece(victim);
     }
-    this.board[to.y][to.x] = null;
+    this.removePiece(piece);
     piece.moveTo(to);
-    this.putPiece(piece);
+    this.addPiece(piece);
     return victim;
   }
 
@@ -118,5 +249,9 @@ public class Board {
 
   public King getKing(Piece.Color color) {
     return color == Piece.Color.WHITE ? this.whiteKing : this.blackKing;
+  }
+
+  public boolean isInCheckmate(Piece.Color color) {
+    return this.checkmate == color;
   }
 }

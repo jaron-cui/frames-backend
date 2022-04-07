@@ -9,6 +9,10 @@ import java.util.Set;
 public abstract class Piece {
   public enum Color {
     WHITE, BLACK;
+
+    public Color other() {
+      return this == WHITE ? BLACK : WHITE;
+    }
   }
 
   protected final Color color;
