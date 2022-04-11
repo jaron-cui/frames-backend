@@ -1,4 +1,4 @@
-package com.frames.frames;
+package websocket;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

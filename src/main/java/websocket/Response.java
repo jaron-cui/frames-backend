@@ -1,4 +1,4 @@
-package com.frames.frames;
+package websocket;
 
 public class Response {
 
