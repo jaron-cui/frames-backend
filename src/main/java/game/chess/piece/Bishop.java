@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Bishop extends Linear {
   public Bishop(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("bishop", board, color, position);
   }
 
   @Override

@@ -1,19 +1,8 @@
 package game.chess;
 
-import game.chess.piece.Piece;
-
-public class Move {
-  private Piece.Color color;
+public class ChessMove {
   private Position from;
   private Position to;
-
-  public Piece.Color getColor() {
-    return color;
-  }
-
-  public void setColor(Piece.Color color) {
-    this.color = color;
-  }
 
   public Position getFrom() {
     return from;

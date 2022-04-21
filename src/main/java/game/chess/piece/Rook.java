@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Rook extends Linear {
   public Rook(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("rook", board, color, position);
   }
 
   @Override

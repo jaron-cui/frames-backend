@@ -6,8 +6,8 @@ import game.chess.Position;
 import java.util.Set;
 
 public abstract class Linear extends Piece {
-  protected Linear(Board board, Color color, Position position) {
-    super(board, color, position);
+  protected Linear(String name, Board board, Color color, Position position) {
+    super(name, board, color, position);
   }
 
   protected void addOrthogonalMoves(Set<Position> positions) {

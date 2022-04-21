@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class King extends Enumerated {
   public King(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("king", board, color, position);
   }
 
   @Override

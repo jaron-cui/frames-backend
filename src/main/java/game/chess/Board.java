@@ -1,5 +1,6 @@
 package game.chess;
 
+import game.IllegalMoveException;
 import game.chess.piece.Bishop;
 import game.chess.piece.King;
 import game.chess.piece.Knight;
@@ -201,7 +202,7 @@ public class Board {
 
   public Piece makeMove(Piece piece, Position to) {
     if (!to.isInBounds()) {
-      throw new IllegalArgumentException("Destination is out of bounds.");
+      throw new IllegalMoveException("Destination is out of bounds.");
     }
 
     Piece.Color color = piece.getColor();
@@ -220,7 +221,7 @@ public class Board {
       }
       return this.movePiece(piece, to);
     } else {
-      throw new IllegalArgumentException("Illegal move.");
+      throw new IllegalMoveException("Illegal move.");
     }
   }
 

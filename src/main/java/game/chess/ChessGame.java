@@ -1,6 +1,6 @@
 package game.chess;
 
-import game.Game;
+import game.IllegalMoveException;
 import game.chess.piece.Piece;
 import game.chess.piece.Piece.Color;
 
@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ChessGame extends Game<Move> {
+public class ChessGame {
   private final Board board;
   private final Map<Color, Set<Piece>> captures;
 
@@ -18,7 +18,6 @@ public class ChessGame extends Game<Move> {
   }
 
   public ChessGame(Board board) {
-    super(Move.class);
     this.board = board;
     this.captures = new HashMap<>();
 
@@ -26,21 +25,27 @@ public class ChessGame extends Game<Move> {
     this.captures.put(Color.BLACK, new HashSet<>());
   }
 
-  @Override
-  public void onMessage(Move move) {
-    Color playerColor = move.getColor();
-    Piece piece = this.board.getPieceAt(move.getFrom());
+  public Board getBoard() {
+    return this.board;
+  }
+
+  public Set<Piece> getCaptures(Color color) {
+    return this.captures.get(color);
+  }
+
+  public void move(Color playerColor, Position from, Position to) {
+    Piece piece = this.board.getPieceAt(from);
     if (piece == null) {
-      throw new IllegalArgumentException(
+      throw new IllegalMoveException(
           "There must be a piece at the specified position in order to move."
       );
     } else if (piece.getColor() != playerColor) {
-      throw new IllegalArgumentException(
+      throw new IllegalMoveException(
           "A piece must have the same color as the player in order to be moved."
       );
     }
 
-    Piece victim = this.board.makeMove(piece, move.getTo());
+    Piece victim = this.board.makeMove(piece, to);
     if (victim != null) {
       this.captures.get(playerColor).add(victim);
     }
@@ -53,30 +58,5 @@ public class ChessGame extends Game<Move> {
     } else {
 
     }
-  }
-
-  @Override
-  public void start() {
-
-  }
-
-  @Override
-  public void end() {
-
-  }
-
-  @Override
-  public boolean inProgress() {
-    return false;
-  }
-
-  @Override
-  public boolean isOver() {
-    return false;
-  }
-
-  @Override
-  public String getWinner() {
-    return null;
   }
 }

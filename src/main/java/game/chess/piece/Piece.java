@@ -15,12 +15,14 @@ public abstract class Piece {
     }
   }
 
+  protected final String name;
   protected final Color color;
   protected final Board board;
   protected Position position;
   protected boolean moved;
 
-  protected Piece(Board board, Color color, Position position) {
+  protected Piece(String name, Board board, Color color, Position position) {
+    this.name = name;
     this.board = board;
     this.color = color;
     this.position = position;
@@ -63,5 +65,9 @@ public abstract class Piece {
   public void moveTo(Position to) {
     this.moved = true;
     this.position = to;
+  }
+
+  public String getName() {
+    return this.name;
   }
 }

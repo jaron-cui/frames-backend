@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Knight extends Enumerated {
   public Knight(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("knight", board, color, position);
   }
 
   @Override

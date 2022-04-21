@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Queen extends Linear {
   public Queen(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("queen", board, color, position);
   }
 
   @Override

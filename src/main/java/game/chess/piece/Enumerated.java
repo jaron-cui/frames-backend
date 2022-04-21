@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Enumerated extends Piece {
-  protected Enumerated(Board board, Color color, Position position) {
-    super(board, color, position);
+  protected Enumerated(String name, Board board, Color color, Position position) {
+    super(name, board, color, position);
   }
 
   protected Set<Position> getAttackable(Position[] enumeration) {

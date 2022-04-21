@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Pawn extends Piece {
   public Pawn(Board board, Color color, Position position) {
-    super(board, color, position);
+    super("pawn", board, color, position);
   }
 
   @Override

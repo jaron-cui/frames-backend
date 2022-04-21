@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class CoinRoulette extends Game<PlayerMove> {
+public class CoinRoulette extends DeprecatedGame<PlayerMove> {
   private Set<String> players;
   private Map<String, Integer> scores;
   private final int winMin, winBy;

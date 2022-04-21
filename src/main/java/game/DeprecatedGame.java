@@ -1,10 +1,10 @@
 package game;
 
-public abstract class Game<Message> {
+public abstract class DeprecatedGame<Message> {
   protected Connector<Message> connector;
   protected final Class<Message> responseClass;
 
-  protected Game(Class<Message> responseClass) {
+  protected DeprecatedGame(Class<Message> responseClass) {
     this.responseClass = responseClass;
   }
 

@@ -1,4 +1,4 @@
-package websocket;
+package web;
 
 public class Message {
 
