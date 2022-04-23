@@ -21,4 +21,11 @@ public class ServiceAdvice {
   public String notFound(Exception e) {
     return e.getMessage();
   }
+
+  @ResponseBody
+  @ExceptionHandler(UnauthorizedException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public String unauthorized(Exception e) {
+    return e.getMessage();
+  }
 }

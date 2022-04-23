@@ -2,11 +2,17 @@ package web.service;
 
 import game.ChessGameHandler;
 import game.GameHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import web.SessionManager;
+import web.data.Lobby;
+import web.message.LobbyMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,37 +20,39 @@ import java.util.Map;
 @RestController
 @RequestMapping("/game")
 public class GameService {
-  // map of game id to game handler
-  private final static Map<String, GameHandler> gameHandlers = new HashMap<>();
-  // map of player session id to game id
-  private final static Map<String, String> gameSessions = new HashMap<>();
-  // TODO: implement support for credential requirement/profile-tied games
-  @PostMapping("/create/{game}")
-  @ResponseBody
-  public GameCreationResponse create(@PathVariable String game) {
-    GameHandler gameHandler = new ChessGameHandler();
-    String gameId = String.valueOf(gameHandlers.size());
-    String playerSessionId = String.valueOf(gameSessions.size());
-    gameHandlers.put(gameId, gameHandler);
-    gameSessions.put(playerSessionId, gameId);
+  private final SessionManager sessionManager;
+  private final Map<String, Lobby> lobbies;
 
-    GameCreationResponse response = new GameCreationResponse();
-    response.setGameId(gameId);
-    response.setPlayerSessionId(playerSessionId);
-    System.out.println("Created game " + gameId + " with player " + playerSessionId + ".");
-    return response;
+  public GameService() {
+    this.sessionManager = new SessionManager();
+    this.lobbies = new HashMap<>();
   }
 
-  @PostMapping("/join/{gameId}")
-  @ResponseBody
-  public String join(@PathVariable String gameId) {
-    if (gameHandlers.containsKey(gameId)) {
-      String playerSessionId = String.valueOf(gameSessions.size());
-      gameSessions.put(playerSessionId, gameId);
-      System.out.println("New player " + playerSessionId + " joined game " + gameId);
-      return playerSessionId;
-    } else {
-      throw new InvalidGameSessionException();
+  @PostMapping("/createLobby/{game}")
+  public void createLobby(@RequestHeader("sessionId") String sessionId, @PathVariable String game) {
+    this.checkSession(sessionId);
+
+    String lobbyId = Integer.toString(this.lobbies.size());
+    Lobby lobby = new Lobby(lobbyId);
+    lobby.addPlayer(sessionId);
+    this.lobbies.put(lobbyId, lobby);
+    this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
+  }
+
+  @PostMapping("/join/{lobbyId}")
+  public void join(@RequestHeader("sessionId") String sessionId, @PathVariable String lobbyId) {
+    this.checkSession(sessionId);
+    Lobby lobby = this.lobbies.get(lobbyId);
+    for (String player : lobby.getPlayers()) {
+      this.sessionManager.sendMessage(player, new LobbyMessage.PlayerJoined(sessionId));
+    }
+    lobby.addPlayer(sessionId);
+    this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
+  }
+
+  private void checkSession(String sessionId) {
+    if (!this.sessionManager.isActiveSession(sessionId)) {
+      throw new UnauthorizedException("Missing or invalid sessionId.");
     }
   }
 
