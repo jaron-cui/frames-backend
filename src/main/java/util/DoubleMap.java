@@ -1,4 +1,4 @@
-package web;
+package util;
 
 import java.util.Collection;
 import java.util.HashMap;

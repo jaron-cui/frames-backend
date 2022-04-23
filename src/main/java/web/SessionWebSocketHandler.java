@@ -3,16 +3,12 @@ package web;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import web.message.Initial;
+import web.message.SessionCreationMessage;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SessionWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
   private final SessionManager sessionManager;
@@ -24,7 +20,7 @@ public class SessionWebSocketHandler extends TextWebSocketHandler implements Sub
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     this.sessionManager.addSession(session);
-    this.sessionManager.sendMessage(session.getId(), new Initial(session.getId()));
+    this.sessionManager.sendMessage(session.getId(), new SessionCreationMessage(session.getId()));
   }
 
   @Override

@@ -1,7 +1,5 @@
 package web.data;
 
-import web.DoubleMap;
-
 import java.util.ArrayList;
 import java.util.List;
 

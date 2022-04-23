@@ -9,14 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ServiceAdvice {
   @ResponseBody
-  @ExceptionHandler(LoginFailureException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public String loginFailure(Exception e) {
-    return e.getMessage();
-  }
-
-  @ResponseBody
-  @ExceptionHandler(InvalidGameSessionException.class)
+  @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public String notFound(Exception e) {
     return e.getMessage();

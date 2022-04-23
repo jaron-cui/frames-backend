@@ -1,14 +1,9 @@
 package web.service;
 
-import game.ChessGameHandler;
-import game.GameHandler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import web.SessionManager;
 import web.data.Lobby;
@@ -28,10 +23,11 @@ public class GameService {
     this.lobbies = new HashMap<>();
   }
 
-  @PostMapping("/createLobby/{game}")
+  @PostMapping("/create/{game}")
   public void createLobby(@RequestHeader("sessionId") String sessionId, @PathVariable String game) {
     this.checkSession(sessionId);
 
+    // TODO: make better lobbyId system with randomized characters
     String lobbyId = Integer.toString(this.lobbies.size());
     Lobby lobby = new Lobby(lobbyId);
     lobby.addPlayer(sessionId);
@@ -42,6 +38,9 @@ public class GameService {
   @PostMapping("/join/{lobbyId}")
   public void join(@RequestHeader("sessionId") String sessionId, @PathVariable String lobbyId) {
     this.checkSession(sessionId);
+    if (!this.lobbies.containsKey(lobbyId)) {
+      throw new NotFoundException("Invalid lobby.");
+    }
     Lobby lobby = this.lobbies.get(lobbyId);
     for (String player : lobby.getPlayers()) {
       this.sessionManager.sendMessage(player, new LobbyMessage.PlayerJoined(sessionId));
@@ -52,28 +51,7 @@ public class GameService {
 
   private void checkSession(String sessionId) {
     if (!this.sessionManager.isActiveSession(sessionId)) {
-      throw new UnauthorizedException("Missing or invalid sessionId.");
-    }
-  }
-
-  private static class GameCreationResponse {
-    private String gameId;
-    private String playerSessionId;
-
-    public String getGameId() {
-      return gameId;
-    }
-
-    public void setGameId(String gameId) {
-      this.gameId = gameId;
-    }
-
-    public String getPlayerSessionId() {
-      return playerSessionId;
-    }
-
-    public void setPlayerSessionId(String playerSessionId) {
-      this.playerSessionId = playerSessionId;
+      throw new UnauthorizedException("Invalid session.");
     }
   }
 }

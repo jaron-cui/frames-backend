@@ -1,9 +1,9 @@
 package web.message;
 
-public class Initial extends WebSocketMessage {
+public class SessionCreationMessage extends WebSocketMessage {
   private final String sessionId;
 
-  public Initial(String sessionId) {
+  public SessionCreationMessage(String sessionId) {
     super("initial");
     this.sessionId = sessionId;
   }
