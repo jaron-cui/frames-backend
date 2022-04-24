@@ -5,3 +5,4 @@ target
 *.iml
 mvnw
 mvnw.cmd
+pom.xml
