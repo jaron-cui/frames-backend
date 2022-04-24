@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import web.SessionManager;
 import web.data.Lobby;
 import web.message.LobbyMessage;
+import web.message.WebSocketMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,15 +25,15 @@ public class GameService {
   }
 
   @PostMapping("/create/{game}")
-  public void createLobby(@RequestHeader("sessionId") String sessionId, @PathVariable String game) {
+  public void create(@RequestHeader("sessionId") String sessionId, @PathVariable String game) {
     this.checkSession(sessionId);
 
     // TODO: make better lobbyId system with randomized characters
     String lobbyId = Integer.toString(this.lobbies.size());
     Lobby lobby = new Lobby(lobbyId);
-    lobby.addPlayer(sessionId);
     this.lobbies.put(lobbyId, lobby);
-    this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
+
+    this.addPlayerToLobby(lobbyId, sessionId);
   }
 
   @PostMapping("/join/{lobbyId}")
@@ -41,17 +42,30 @@ public class GameService {
     if (!this.lobbies.containsKey(lobbyId)) {
       throw new NotFoundException("Invalid lobby.");
     }
-    Lobby lobby = this.lobbies.get(lobbyId);
-    for (String player : lobby.getPlayers()) {
-      this.sessionManager.sendMessage(player, new LobbyMessage.PlayerJoined(sessionId));
-    }
-    lobby.addPlayer(sessionId);
-    this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
+
+    this.addPlayerToLobby(lobbyId, sessionId);
   }
 
   private void checkSession(String sessionId) {
     if (!this.sessionManager.isActiveSession(sessionId)) {
       throw new UnauthorizedException("Invalid session.");
     }
+  }
+
+  private void messageLobby(Lobby lobby, WebSocketMessage message) {
+    for (String player : lobby.getPlayers()) {
+      this.sessionManager.sendMessage(player, message);
+    }
+  }
+
+  private void addPlayerToLobby(String lobbyId, String sessionId) {
+    Lobby lobby = this.lobbies.get(lobbyId);
+
+    // tell the lobby a new player has joined and then add the player
+    this.messageLobby(lobby, new LobbyMessage.PlayerJoined(sessionId));
+    lobby.addPlayer(sessionId);
+
+    // tell the player that they have been assigned to the lobby
+    this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
   }
 }
