@@ -1,12 +1,15 @@
 package web;
 
+import game.GameHandler;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import util.Data;
+import web.data.Lobby;
 import web.message.SessionCreationMessage;
+import web.service.GameService;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +31,8 @@ public class SessionWebSocketHandler extends TextWebSocketHandler implements Sub
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message)
       throws Exception {
-
+    GameHandler gameHandler = GameService.sessionToGameHandler.get(session.getId());
+    gameHandler.acceptMessage(session.getId(), new String(message.asBytes()));
   }
 
   @Override

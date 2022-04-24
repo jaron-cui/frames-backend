@@ -44,6 +44,9 @@ public class PositionCache {
 
     this.positions.put(piece, newPositions);
     for (Position position : newPositions) {
+      if (!position.isInBounds()) {
+        System.out.println("outta bounds");
+      }
       this.positionGrid[position.y][position.x].add(piece);
     }
   }

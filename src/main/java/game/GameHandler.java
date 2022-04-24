@@ -4,21 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import web.data.Lobby;
 
-public abstract class GameHandler<GameType> {
-  protected Messenger messenger;
+public abstract class GameHandler {
+  protected final Lobby lobby;
 
-  public GameHandler() {
-
+  public GameHandler(Lobby lobby) {
+    this.lobby = lobby;
   }
 
-  public abstract void acceptMessage(Message message);
+  public abstract void acceptMessage(String sessionId, String message);
+
+  public abstract void start();
 
   public abstract Object getGameState();
-
-  public void registerMessenger(Messenger messenger) {
-    this.messenger = messenger;
-  }
 
   protected <T> T deserialize(String message, Class<T> format) {
     try {
@@ -27,5 +26,9 @@ public abstract class GameHandler<GameType> {
     } catch (JsonProcessingException e) {
       throw new InvalidMessageException("Invalid message structure.");
     }
+  }
+
+  public Lobby getLobby() {
+    return this.lobby;
   }
 }

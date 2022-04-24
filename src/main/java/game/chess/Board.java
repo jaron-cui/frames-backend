@@ -9,6 +9,7 @@ import game.chess.piece.Piece;
 import game.chess.piece.Queen;
 import game.chess.piece.Rook;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,8 +29,12 @@ public class Board {
     this.board = new Piece[8][8];
     this.pieces = new HashSet<>();
     this.colorPieces = new HashMap<>();
+    this.colorPieces.put(Piece.Color.WHITE, new HashSet<>());
+    this.colorPieces.put(Piece.Color.BLACK, new HashSet<>());
     this.updateTracker = new PositionCache();
     this.possibleMoves = new HashMap<>();
+    this.possibleMoves.put(Piece.Color.WHITE, new PositionCache());
+    this.possibleMoves.put(Piece.Color.BLACK, new PositionCache());
     this.setBoard();
     for (Piece piece : this.pieces) {
       this.updateCacheFor(piece);
@@ -54,8 +59,8 @@ public class Board {
     pieces.add(new Knight(this, color, new Position(1, home)));
     pieces.add(new Bishop(this, color, new Position(2, home)));
 
-    pieces.add(new Queen(this, color, new Position(forward * 3, home)));
-    King king = new King(this, color, new Position(forward * 4, home));
+    pieces.add(new Queen(this, color, new Position(forward * 3 + home, home)));
+    King king = new King(this, color, new Position(forward * 4 + home, home));
     pieces.add(king);
 
     pieces.add(new Bishop(this, color, new Position(5, home)));
@@ -100,10 +105,12 @@ public class Board {
         this.board[y][x] = null;
       }
     }
+    System.out.println("nulled board");
     for (Piece piece : this.pieces) {
       this.updateTracker.removePiece(piece);
       this.possibleMoves.get(piece.getColor()).removePiece(piece);
     }
+    System.out.println("cleared caches");
     this.pieces.clear();
     this.colorPieces.get(Piece.Color.WHITE).clear();
     this.colorPieces.get(Piece.Color.BLACK).clear();

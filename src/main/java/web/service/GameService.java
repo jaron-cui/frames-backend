@@ -1,5 +1,7 @@
 package web.service;
 
+import game.ChessGameHandler;
+import game.GameHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -17,11 +19,12 @@ import java.util.Map;
 @RequestMapping("/game")
 public class GameService {
   private final SessionManager sessionManager;
-  private final Map<String, Lobby> lobbies;
+  private final Map<String, GameHandler> gameHandlers;
+  public static final Map<String, GameHandler> sessionToGameHandler = new HashMap<>();
 
   public GameService() {
     this.sessionManager = new SessionManager();
-    this.lobbies = new HashMap<>();
+    this.gameHandlers = new HashMap<>();
   }
 
   @PostMapping("/create/{game}")
@@ -29,17 +32,17 @@ public class GameService {
     this.checkSession(sessionId);
 
     // TODO: make better lobbyId system with randomized characters
-    String lobbyId = Integer.toString(this.lobbies.size());
-    Lobby lobby = new Lobby(lobbyId);
-    this.lobbies.put(lobbyId, lobby);
+    String gameId = Integer.toString(this.gameHandlers.size());
+    Lobby lobby = new Lobby(gameId);
+    this.gameHandlers.put(gameId, new ChessGameHandler(lobby));
 
-    this.addPlayerToLobby(lobbyId, sessionId);
+    this.addPlayerToLobby(gameId, sessionId);
   }
 
   @PostMapping("/join/{lobbyId}")
   public void join(@RequestHeader("sessionId") String sessionId, @PathVariable String lobbyId) {
     this.checkSession(sessionId);
-    if (!this.lobbies.containsKey(lobbyId)) {
+    if (!this.gameHandlers.containsKey(lobbyId)) {
       throw new NotFoundException("Invalid lobby.");
     }
 
@@ -58,8 +61,8 @@ public class GameService {
     }
   }
 
-  private void addPlayerToLobby(String lobbyId, String sessionId) {
-    Lobby lobby = this.lobbies.get(lobbyId);
+  private void addPlayerToLobby(String gameId, String sessionId) {
+    Lobby lobby = this.gameHandlers.get(gameId).getLobby();
 
     // tell the lobby a new player has joined and then add the player
     this.messageLobby(lobby, new LobbyMessage.PlayerJoined(sessionId));
@@ -67,5 +70,7 @@ public class GameService {
 
     // tell the player that they have been assigned to the lobby
     this.sessionManager.sendMessage(sessionId, new LobbyMessage.Assignment(lobby));
+    sessionToGameHandler.put(sessionId, this.gameHandlers.get(gameId));
+    this.gameHandlers.get(gameId).start();
   }
 }
