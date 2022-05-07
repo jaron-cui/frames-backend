@@ -1,9 +1,9 @@
-package web.message;
+package web.message.outgoing;
 
-public abstract class WebSocketMessage {
+public abstract class OutgoingMessage {
   private final String type;
 
-  public WebSocketMessage(String type) {
+  public OutgoingMessage(String type) {
     this.type = type;
   }
 

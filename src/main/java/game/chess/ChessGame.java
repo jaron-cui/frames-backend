@@ -1,6 +1,8 @@
 package game.chess;
 
 import game.IllegalMoveException;
+import game.chess.model.Board;
+import game.chess.model.Position;
 import game.chess.piece.Piece;
 import game.chess.piece.Piece.Color;
 

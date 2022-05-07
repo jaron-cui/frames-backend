@@ -1,6 +1,8 @@
-package game.chess;
+package game.chess.model;
 
 import game.IllegalMoveException;
+import game.chess.model.Position;
+import game.chess.model.PositionCache;
 import game.chess.piece.Bishop;
 import game.chess.piece.King;
 import game.chess.piece.Knight;
@@ -9,7 +11,6 @@ import game.chess.piece.Piece;
 import game.chess.piece.Queen;
 import game.chess.piece.Rook;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

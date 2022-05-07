@@ -1,4 +1,4 @@
-package game.chess;
+package game.chess.model;
 
 public class ChessMove {
   private Position from;

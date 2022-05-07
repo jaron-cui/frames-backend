@@ -1,7 +1,7 @@
 package game.chess.piece;
 
-import game.chess.Board;
-import game.chess.Position;
+import game.chess.model.Board;
+import game.chess.model.Position;
 
 import java.util.Set;
 

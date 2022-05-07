@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class CoinRoulette extends DeprecatedGame<PlayerMove> {
+// this needs to be reworked to fit into the redesigned class architecture for games
+public class CoinRoulette {
   private Set<String> players;
   private Map<String, Integer> scores;
   private final int winMin, winBy;
@@ -16,7 +17,6 @@ public class CoinRoulette extends DeprecatedGame<PlayerMove> {
   private boolean inProgress;
 
   public CoinRoulette(int winMin, int winBy, String... players) {
-    super(PlayerMove.class);
     this.players = new HashSet<>(Arrays.asList(players));
     this.winMin = winMin;
     this.winBy = winBy;
@@ -24,7 +24,6 @@ public class CoinRoulette extends DeprecatedGame<PlayerMove> {
     this.inProgress = false;
   }
 
-  @Override
   public void onMessage(PlayerMove move) {
     if (!this.inProgress() || this.isOver()) {
       return;
@@ -39,7 +38,6 @@ public class CoinRoulette extends DeprecatedGame<PlayerMove> {
     }
   }
 
-  @Override
   public void start() {
     for (String player : this.players) {
       this.scores.put(player, 0);
@@ -47,22 +45,18 @@ public class CoinRoulette extends DeprecatedGame<PlayerMove> {
     this.inProgress = true;
   }
 
-  @Override
   public void end() {
     this.inProgress = false;
   }
 
-  @Override
   public boolean inProgress() {
     return this.inProgress;
   }
 
-  @Override
   public boolean isOver() {
     return this.getWinner() != null;
   }
 
-  @Override
   public String getWinner() {
     String firstPlayer = null, secondPlayer = null;
     int firstScore = 0, secondScore = 0;

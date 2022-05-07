@@ -1,4 +1,4 @@
-package game.chess;
+package game.chess.model;
 
 import game.chess.piece.Piece;
 

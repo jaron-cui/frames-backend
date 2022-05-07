@@ -1,4 +1,4 @@
-package game.chess;
+package game.chess.model;
 
 public class Position {
   public final int x, y;

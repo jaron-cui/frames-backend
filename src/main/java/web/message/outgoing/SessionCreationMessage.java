@@ -1,6 +1,6 @@
-package web.message;
+package web.message.outgoing;
 
-public class SessionCreationMessage extends WebSocketMessage {
+public class SessionCreationMessage extends OutgoingMessage {
   private final String sessionId;
 
   public SessionCreationMessage(String sessionId) {

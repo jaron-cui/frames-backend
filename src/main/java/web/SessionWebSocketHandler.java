@@ -1,21 +1,20 @@
 package web;
 
-import game.GameHandler;
+import util.Data;
+import web.data.GameHandler;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import util.Data;
-import web.data.Lobby;
-import web.message.SessionCreationMessage;
+import web.message.incoming.IncomingMessage;
+import web.message.outgoing.SessionCreationMessage;
 import web.service.GameService;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SessionWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
+public class SessionWebSocketHandler extends TextWebSocketHandler {
   private final SessionManager sessionManager;
 
   public SessionWebSocketHandler(SessionManager sessionManager) {
@@ -32,7 +31,8 @@ public class SessionWebSocketHandler extends TextWebSocketHandler implements Sub
   public void handleTextMessage(WebSocketSession session, TextMessage message)
       throws Exception {
     GameHandler gameHandler = GameService.sessionToGameHandler.get(session.getId());
-    gameHandler.acceptMessage(session.getId(), new String(message.asBytes()));
+    gameHandler.acceptMessage(session.getId(), Data.deserialize(new String(message.asBytes()),
+        IncomingMessage.class));
   }
 
   @Override
@@ -43,6 +43,8 @@ public class SessionWebSocketHandler extends TextWebSocketHandler implements Sub
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
       throws Exception {
+    GameHandler gameHandler = GameService.sessionToGameHandler.get(session.getId());
+    gameHandler.acceptMessage(session.getId(), new IncomingMessage(IncomingMessage.Type.QUIT));
     this.sessionManager.endSession(session.getId(), closeStatus);
   }
 
@@ -50,9 +52,9 @@ public class SessionWebSocketHandler extends TextWebSocketHandler implements Sub
   public boolean supportsPartialMessages() {
     return false;
   }
-
+/*
   @Override
   public List<String> getSubProtocols() {
     return Collections.singletonList("subprotocol.demo.websocket");
-  }
+  }*/
 }
