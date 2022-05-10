@@ -4,7 +4,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import util.Data;
-import web.data.Lobby;
 
 import java.io.IOException;
 import java.util.HashMap;
