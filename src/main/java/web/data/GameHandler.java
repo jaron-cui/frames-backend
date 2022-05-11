@@ -1,6 +1,6 @@
 package web.data;
 
-import web.SessionManager;
+import web.service.SessionManager;
 import web.message.incoming.IncomingMessage;
 import web.message.outgoing.GameMessage;
 

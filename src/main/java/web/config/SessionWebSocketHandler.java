@@ -1,18 +1,15 @@
-package web;
+package web.config;
 
 import util.Data;
 import web.data.GameHandler;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.SubProtocolCapable;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import web.message.incoming.IncomingMessage;
 import web.message.outgoing.SessionCreationMessage;
-import web.service.GameService;
-
-import java.util.Collections;
-import java.util.List;
+import web.controller.GameController;
+import web.service.SessionManager;
 
 public class SessionWebSocketHandler extends TextWebSocketHandler {
   private final SessionManager sessionManager;
@@ -30,7 +27,7 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message)
       throws Exception {
-    GameHandler gameHandler = GameService.sessionToGameHandler.get(session.getId());
+    GameHandler gameHandler = GameController.sessionToGameHandler.get(session.getId());
     gameHandler.acceptMessage(session.getId(), Data.deserialize(new String(message.asBytes()),
         IncomingMessage.class));
   }
@@ -43,7 +40,7 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
       throws Exception {
-    GameHandler gameHandler = GameService.sessionToGameHandler.get(session.getId());
+    GameHandler gameHandler = GameController.sessionToGameHandler.get(session.getId());
     gameHandler.acceptMessage(session.getId(), new IncomingMessage(IncomingMessage.Type.QUIT));
     this.sessionManager.endSession(session.getId(), closeStatus);
   }

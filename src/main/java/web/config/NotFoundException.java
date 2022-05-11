@@ -1,4 +1,4 @@
-package web.service;
+package web.config;
 
 public class NotFoundException extends RuntimeException {
   public NotFoundException(String message) {

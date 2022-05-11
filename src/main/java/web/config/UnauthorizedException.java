@@ -1,4 +1,4 @@
-package web.service;
+package web.config;
 
 public class UnauthorizedException extends RuntimeException {
   public UnauthorizedException(String message) {

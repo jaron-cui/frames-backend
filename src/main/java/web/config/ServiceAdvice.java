@@ -1,4 +1,4 @@
-package web.service;
+package web.config;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

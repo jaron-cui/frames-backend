@@ -1,5 +1,6 @@
-package web;
+package web.service;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -11,9 +12,6 @@ import java.util.Map;
 
 public class SessionManager {
   private static final Map<String, WebSocketSession> sessions = new HashMap<>();
-
-  public SessionManager() {
-  }
 
   public WebSocketSession getSession(String sessionId) {
     return sessions.get(sessionId);

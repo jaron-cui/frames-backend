@@ -1,15 +1,18 @@
-package web.service;
+package web.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import web.config.UnauthorizedException;
 
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: This is currently not used. Maybe rewrite this later w/ Spring-supported login system
+// or something
 @RestController
-public class LoginService {
+public class LoginController {
   private final static Map<String, String> passwords = initUsers();
   private final static Map<String, String> userSessions = new HashMap<>();
 
