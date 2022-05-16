@@ -1,4 +1,4 @@
-package game.chess;
+package game.chess.model;
 
 import game.IllegalMoveException;
 import game.chess.model.Board;
@@ -11,15 +11,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ChessGame {
+public class ChessModel {
   private final Board board;
   private final Map<Color, Set<Piece>> captures;
 
-  public ChessGame() {
+  public ChessModel() {
     this(new Board());
   }
 
-  public ChessGame(Board board) {
+  public ChessModel(Board board) {
     this.board = board;
     this.captures = new HashMap<>();
 
@@ -35,7 +35,7 @@ public class ChessGame {
     return this.captures.get(color);
   }
 
-  public void move(Color playerColor, Position from, Position to) {
+  public void move(Color playerColor, Position from, Position to) throws IllegalMoveException {
     Piece piece = this.board.getPieceAt(from);
     if (piece == null) {
       throw new IllegalMoveException(

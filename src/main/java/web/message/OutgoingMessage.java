@@ -1,4 +1,4 @@
-package web.message.outgoing;
+package web.message;
 
 public abstract class OutgoingMessage {
   private final String type;

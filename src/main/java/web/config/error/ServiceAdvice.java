@@ -1,4 +1,4 @@
-package web.config;
+package web.config.error;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

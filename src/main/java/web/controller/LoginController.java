@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import web.config.UnauthorizedException;
+import web.config.error.UnauthorizedException;
 
 import java.util.HashMap;
 import java.util.Map;

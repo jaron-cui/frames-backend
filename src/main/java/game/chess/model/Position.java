@@ -1,9 +1,13 @@
 package game.chess.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Position {
   public final int x, y;
 
-  public Position(int x, int y) {
+  @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+  public Position(@JsonProperty("x") int x, @JsonProperty("y") int y) {
     this.x = x;
     this.y = y;
   }

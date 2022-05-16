@@ -1,4 +1,6 @@
-package web.message.outgoing;
+package web.message.common;
+
+import web.message.OutgoingMessage;
 
 public class SessionCreationMessage extends OutgoingMessage {
   private final String sessionId;

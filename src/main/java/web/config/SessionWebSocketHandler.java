@@ -1,35 +1,35 @@
 package web.config;
 
+import session.UserSession;
 import util.Data;
-import web.data.GameHandler;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import web.message.incoming.IncomingMessage;
-import web.message.outgoing.SessionCreationMessage;
-import web.controller.GameController;
-import web.service.SessionManager;
+import web.message.IncomingMessage;
+import web.message.common.SessionCreationMessage;
+import session.SessionManager;
 
 public class SessionWebSocketHandler extends TextWebSocketHandler {
   private final SessionManager sessionManager;
 
-  public SessionWebSocketHandler(SessionManager sessionManager) {
-    this.sessionManager = sessionManager;
+  public SessionWebSocketHandler() {
+    this.sessionManager = SessionManager.getInstance();
   }
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-    this.sessionManager.addSession(session);
-    this.sessionManager.sendMessage(session.getId(), new SessionCreationMessage(session.getId()));
+    UserSession userSession = this.sessionManager.createUserSession(session);
+    userSession.sendMessage(new SessionCreationMessage(session.getId()));
   }
 
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message)
       throws Exception {
-    GameHandler gameHandler = GameController.sessionToGameHandler.get(session.getId());
-    gameHandler.acceptMessage(session.getId(), Data.deserialize(new String(message.asBytes()),
-        IncomingMessage.class));
+    UserSession userSession = this.sessionManager.getSession(session.getId());
+    IncomingMessage incomingMessage = Data.deserialize(message.getPayload(), IncomingMessage.class);
+    incomingMessage.setSender(userSession);
+    userSession.acceptMessage(incomingMessage);
   }
 
   @Override
@@ -40,9 +40,9 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
       throws Exception {
-    GameHandler gameHandler = GameController.sessionToGameHandler.get(session.getId());
-    gameHandler.acceptMessage(session.getId(), new IncomingMessage(IncomingMessage.Type.QUIT));
-    this.sessionManager.endSession(session.getId(), closeStatus);
+    UserSession userSession = this.sessionManager.getSession(session.getId());
+    userSession.putInRoom(null);
+    userSession.close();
   }
 
   @Override

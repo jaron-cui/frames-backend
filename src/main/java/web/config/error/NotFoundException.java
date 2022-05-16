@@ -1,4 +1,4 @@
-package web.config;
+package web.config.error;
 
 public class NotFoundException extends RuntimeException {
   public NotFoundException(String message) {

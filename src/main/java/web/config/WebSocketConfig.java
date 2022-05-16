@@ -6,7 +6,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import web.service.SessionManager;
+import session.SessionManager;
 
 @Configuration
 @EnableWebSocket
@@ -18,6 +18,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public WebSocketHandler webSocketHandler() {
-        return new SessionWebSocketHandler(new SessionManager());
+        return new SessionWebSocketHandler();
     }
 }
