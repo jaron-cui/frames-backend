@@ -1,4 +1,4 @@
-package game.settings;
+package game.common.settings;
 
 public class IntegerField extends SettingsField {
   protected IntegerField(String type) {

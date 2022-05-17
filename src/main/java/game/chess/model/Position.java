@@ -1,6 +1,7 @@
 package game.chess.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Position {
@@ -12,6 +13,7 @@ public class Position {
     this.y = y;
   }
 
+  @JsonIgnore
   public boolean isInBounds() {
     return this.x >= 0 && this.x < 8 && this.y >= 0 && this.y < 8;
   }

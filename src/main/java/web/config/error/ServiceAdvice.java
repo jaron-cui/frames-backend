@@ -6,19 +6,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.http.HttpResponse;
+
 @ControllerAdvice
 public class ServiceAdvice {
   @ResponseBody
-  @ExceptionHandler(NotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public String notFound(Exception e) {
-    return e.getMessage();
-  }
-
-  @ResponseBody
-  @ExceptionHandler(UnauthorizedException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public String unauthorized(Exception e) {
-    return e.getMessage();
+  @ExceptionHandler(HttpException.class)
+  public void exception(HttpException e, HttpServletResponse response) throws IOException {
+    response.setStatus(e.getStatus().value());
+    response.getWriter().write(e.getMessage());
   }
 }

@@ -1,4 +1,4 @@
-package game.settings;
+package game.common.settings;
 
 import java.util.HashMap;
 import java.util.Map;

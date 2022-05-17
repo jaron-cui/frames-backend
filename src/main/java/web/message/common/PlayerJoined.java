@@ -6,7 +6,7 @@ public class PlayerJoined extends OutgoingMessage {
   private final String player;
 
   public PlayerJoined(String player) {
-    super("playerJoined");
+    super("player-joined");
     this.player = player;
   }
 

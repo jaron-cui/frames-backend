@@ -1,15 +1,13 @@
 package game.chess.model;
 
-import game.IllegalMoveException;
-import game.chess.model.Position;
-import game.chess.model.PositionCache;
-import game.chess.piece.Bishop;
-import game.chess.piece.King;
-import game.chess.piece.Knight;
-import game.chess.piece.Pawn;
-import game.chess.piece.Piece;
-import game.chess.piece.Queen;
-import game.chess.piece.Rook;
+import game.common.IllegalMoveException;
+import game.chess.model.piece.Bishop;
+import game.chess.model.piece.King;
+import game.chess.model.piece.Knight;
+import game.chess.model.piece.Pawn;
+import game.chess.model.piece.Piece;
+import game.chess.model.piece.Queen;
+import game.chess.model.piece.Rook;
 
 import java.util.HashMap;
 import java.util.HashSet;

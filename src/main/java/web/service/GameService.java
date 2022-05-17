@@ -1,7 +1,7 @@
 package web.service;
 
-import game.Chess;
-import game.Game;
+import game.chess.Chess;
+import game.common.Game;
 import session.Lobby;
 import session.UserSession;
 

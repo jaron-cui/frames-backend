@@ -1,6 +1,7 @@
 package web.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
 import session.UserSession;
 import util.Data;
 
@@ -22,7 +23,7 @@ public class IncomingMessage {
     return content;
   }
 
-  public void setContent(Object content) {
+  public void setContent(JsonNode content) {
     this.content = Data.serialize(content);
   }
 

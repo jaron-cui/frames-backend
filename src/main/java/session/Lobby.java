@@ -1,35 +1,39 @@
 package session;
 
-import game.Game;
-import game.settings.Settings;
+import game.common.Game;
+import game.common.Roster;
+import game.common.settings.Settings;
 import util.Data;
 import web.message.IncomingMessage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class Lobby extends Room {
+public class Lobby<T extends Roster> extends Room {
   public static final String READY = "ready";
   public static final String UNREADY = "unready";
   public static final String UPDATE_SETTING = "updateSetting";
 
-  private final Game game;
+  private final Game<T> game;
   private final Settings config;
+  private final T roster;
   private final Set<UserSession> ready;
 
-  public Lobby(Game game) {
+  public Lobby(Game<T> game) {
     super("lobby");
     this.game = game;
+    this.roster = game.getRoster();
     this.config = new Settings(new HashMap<>());//game.getConfigTemplate();
     this.ready = new HashSet<>();
   }
 
   private void start() {
-    game.createRoom(this.config, this.getPlayers());
+    if (!this.roster.completed()) {
+      throw new IllegalStateException("Cannot start game; roster incomplete.");
+    }
+    game.createRoom(this.config, this.roster);
     this.close();
   }
 

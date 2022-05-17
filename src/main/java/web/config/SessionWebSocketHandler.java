@@ -7,6 +7,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import web.message.IncomingMessage;
+import web.message.common.ErrorMessage;
 import web.message.common.SessionCreationMessage;
 import session.SessionManager;
 
@@ -27,9 +28,13 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
   public void handleTextMessage(WebSocketSession session, TextMessage message)
       throws Exception {
     UserSession userSession = this.sessionManager.getSession(session.getId());
-    IncomingMessage incomingMessage = Data.deserialize(message.getPayload(), IncomingMessage.class);
-    incomingMessage.setSender(userSession);
-    userSession.acceptMessage(incomingMessage);
+    try {
+      IncomingMessage incomingMessage = Data.deserialize(message.getPayload(), IncomingMessage.class);
+      incomingMessage.setSender(userSession);
+      userSession.acceptMessage(incomingMessage);
+    } catch (Exception e) {
+      userSession.sendMessage(new ErrorMessage(e.getMessage()));
+    }
   }
 
   @Override

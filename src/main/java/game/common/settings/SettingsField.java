@@ -1,4 +1,4 @@
-package game.settings;
+package game.common.settings;
 
 public abstract class SettingsField<T> {
   private final String type;

@@ -1,14 +1,19 @@
-package game;
+package game.chess;
 
 import game.chess.model.ChessModel;
 import game.chess.model.ChessMove;
 import game.chess.model.Position;
-import game.chess.piece.Piece;
-import game.settings.Settings;
+import game.chess.model.piece.Piece;
+import game.common.IllegalMoveException;
+import game.common.Roster;
+import game.common.TwoPlayerGame;
+import game.common.TwoPlayerRoster;
+import game.common.settings.Settings;
 import session.UserSession;
 import util.Data;
 import web.message.IncomingMessage;
 import web.message.OutgoingMessage;
+import web.message.common.ErrorMessage;
 import web.message.common.PlayerTurnMessage;
 
 import java.util.ArrayList;
@@ -17,31 +22,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static game.chess.piece.Piece.Color.BLACK;
-import static game.chess.piece.Piece.Color.WHITE;
+import static game.chess.model.piece.Piece.Color.BLACK;
+import static game.chess.model.piece.Piece.Color.WHITE;
 
-public class Chess extends Game {
+public class Chess extends TwoPlayerGame {
   public Chess() {
     super("chess-multiplayer");
   }
 
   @Override
-  public GameRoom createRoom(Settings settings, List<UserSession> players) {
-    return new ChessRoom(players);
+  public GameRoom createRoom(Settings settings, TwoPlayerRoster roster) {
+    return new ChessRoom(roster);
   }
 
   public class ChessRoom extends GameRoom {
-    private ChessModel model;
-    private UserSession white;
-    private UserSession black;
+    private final ChessModel model;
+    private final UserSession white;
+    private final UserSession black;
     private boolean whiteMove;
 
-    private ChessRoom(List<UserSession> players) {
-      super(players);
-      if (players.size() < 2) {
-        this.close();
-        return;
-      }
+    private ChessRoom(TwoPlayerRoster roster) {
+      super(roster);
+      List<UserSession> players = roster.getUsersByRole(Roster.Role.PLAYER);
       this.model = new ChessModel();
       this.white = players.get(0);
       this.black = players.get(1);
@@ -69,7 +71,10 @@ public class Chess extends Game {
               messagePlayers(this.getPlayers(), new PlayerTurnMessage(this.getTurnPlayer()));
             } catch (IllegalMoveException e) {
               // TODO: something
+              message.getSender().sendMessage(new ErrorMessage(e.getMessage()));
             }
+          } else {
+            message.getSender().sendMessage(new ErrorMessage("you are not the one!"));
           }
           break;
         default:

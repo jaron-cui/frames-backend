@@ -1,10 +1,11 @@
 package web.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import web.config.error.UnauthorizedException;
+import web.config.error.HttpException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class LoginController {
       userSessions.put(jwt, username);
       return jwt;
     } else {
-      throw new UnauthorizedException("Login failed.");
+      throw new HttpException(HttpStatus.UNAUTHORIZED, "Login failed.");
     }
   }
 }

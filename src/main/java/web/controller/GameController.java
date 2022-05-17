@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import session.RoomManager;
 import session.SessionManager;
 import session.UserSession;
-import web.config.error.UnauthorizedException;
+import web.config.error.HttpException;
 import web.service.GameService;
 
 @RestController
@@ -44,7 +44,7 @@ public class GameController {
 
   private void checkSession(String sessionId) {
     if (this.sessionManager.getSession(sessionId) == null) {
-      throw new UnauthorizedException("Invalid session.");
+      throw new HttpException("Invalid session.");
     }
   }
 }

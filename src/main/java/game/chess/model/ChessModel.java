@@ -1,10 +1,8 @@
 package game.chess.model;
 
-import game.IllegalMoveException;
-import game.chess.model.Board;
-import game.chess.model.Position;
-import game.chess.piece.Piece;
-import game.chess.piece.Piece.Color;
+import game.common.IllegalMoveException;
+import game.chess.model.piece.Piece;
+import game.chess.model.piece.Piece.Color;
 
 import java.util.HashMap;
 import java.util.HashSet;
