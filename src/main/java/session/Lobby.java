@@ -42,7 +42,8 @@ public class Lobby<T extends Roster> extends Room {
     switch (message.getType()) {
       case READY:
         this.ready.add(message.getSender());
-        if (this.config.completed() && this.ready.size() == this.getPlayers().size()) {
+        if (this.ready.size() == this.getUsers().size()
+            && this.config.completed() && this.roster.completed()) {
           this.start();
         }
         break;
@@ -57,19 +58,23 @@ public class Lobby<T extends Roster> extends Room {
   }
 
   @Override
-  protected void onPlayerJoin(UserSession player) {
-
+  protected void addUser(UserSession user) {
+    super.addUser(user);
+    this.roster.addUser(user);
   }
 
   @Override
-  protected void onPlayerLeave(UserSession player) {
-    this.ready.remove(player);
+  protected void removeUser(UserSession user) {
+    super.removeUser(user);
+    this.ready.remove(user);
+    this.roster.remove(user);
   }
 
   @Override
   public Map<String, Object> retrieveFields() {
     Map<String, Object> fields = super.retrieveFields();
     fields.put("ready", Data.map(this.ready, UserSession::getId));
+    fields.put("game", this.game.getName());
 
     return fields;
   }

@@ -50,7 +50,7 @@ public abstract class Roster {
     return role;
   }
 
-  public void removeUser(UserSession session) {
+  public void remove(UserSession session) {
     this.joinOrder.remove(session);
     this.roleGroups.get(this.roles.remove(session)).remove(session);
   }

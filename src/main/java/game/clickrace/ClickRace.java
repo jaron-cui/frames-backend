@@ -1,6 +1,5 @@
 package game.clickrace;
 
-import game.common.Game;
 import game.common.Roster;
 import game.common.TwoPlayerGame;
 import game.common.TwoPlayerRoster;
@@ -10,10 +9,11 @@ import web.message.IncomingMessage;
 import web.message.common.GameOverMessage;
 import web.message.common.ScoreUpdateMessage;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClickRace extends TwoPlayerGame {
   public ClickRace() {
@@ -27,6 +27,7 @@ public class ClickRace extends TwoPlayerGame {
 
   public class ClickRaceRoom extends GameRoom {
     private final Map<UserSession, Integer> players;
+    private final int maxDelay;
     private final int winMin;
     private final int winBy;
     private final int[] scores;
@@ -41,38 +42,42 @@ public class ClickRace extends TwoPlayerGame {
 
       this.scores = new int[2];
       this.clickable = false;
+      this.maxDelay = 7000;
       this.winMin = 3;
       this.winBy = 2;
     }
 
+    private void startNextRound() {
+      this.clickable = false;
+      int delay = (int) (Math.random() * this.maxDelay);
+      new Timer().schedule(new TimerTask() {
+        @Override
+        public void run() {
+          clickable = true;
+          messageAll(new ClickableMessage());
+        }
+      }, delay);
+    }
+
     @Override
     protected void handleCustomMessage(IncomingMessage message) {
-      if (this.clickable && message.getType().equals(MOVE)) {
-        this.handleMove(message.getSender());
+      if (!message.getType().equals(MOVE)) {
+        return;
       }
-    }
 
-    private void handleMove(UserSession sender) {
-      if (this.players.containsKey(sender)) {
-        int playerNumber = this.players.get(sender);
-        int score1 = this.scores[playerNumber] += 1;
-        int score2 = this.scores[playerNumber == 0 ? 1 : 0];
-        messagePlayers(this.getPlayers(), new ScoreUpdateMessage(sender, score1));
-        if (score1 > this.winMin && score1 - score2 >= this.winBy) {
-          messagePlayers(this.getPlayers(), new GameOverMessage(sender));
-          // TODO: handle game end
-        }
+      UserSession player = message.getSender();
+      int scoreChange = this.clickable ? 1 : -1;
+      int newScore = this.scores[this.players.get(player)] += scoreChange;
+      this.messageAll(new ScoreUpdateMessage(player, newScore));
+
+      int otherScore = this.scores[this.players.get(player) == 0 ? 1 : 0];
+      if (this.clickable && newScore > this.winMin && newScore - otherScore >= this.winBy) {
+        this.messageAll(new GameOverMessage(player));
+        // TODO: handle game over
+        return;
       }
-    }
 
-    @Override
-    protected void onPlayerJoin(UserSession player) {
-
-    }
-
-    @Override
-    protected void onPlayerLeave(UserSession player) {
-
+      this.startNextRound();
     }
   }
 }

@@ -1,0 +1,1 @@
+..\..\..\..\..\..\..\..\'Program Files'\Java\jdk-11.0.9\bin\keytool -genkeypair -alias baeldung -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore keystore.p12 -validity 3650

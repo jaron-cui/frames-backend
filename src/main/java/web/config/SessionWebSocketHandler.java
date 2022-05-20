@@ -1,5 +1,6 @@
 package web.config;
 
+import org.springframework.web.socket.SubProtocolCapable;
 import session.UserSession;
 import util.Data;
 import org.springframework.web.socket.CloseStatus;
@@ -11,7 +12,10 @@ import web.message.common.ErrorMessage;
 import web.message.common.SessionCreationMessage;
 import session.SessionManager;
 
-public class SessionWebSocketHandler extends TextWebSocketHandler {
+import java.util.Collections;
+import java.util.List;
+
+public class SessionWebSocketHandler extends TextWebSocketHandler implements SubProtocolCapable {
   private final SessionManager sessionManager;
 
   public SessionWebSocketHandler() {
@@ -30,7 +34,6 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
     UserSession userSession = this.sessionManager.getSession(session.getId());
     try {
       IncomingMessage incomingMessage = Data.deserialize(message.getPayload(), IncomingMessage.class);
-      incomingMessage.setSender(userSession);
       userSession.acceptMessage(incomingMessage);
     } catch (Exception e) {
       userSession.sendMessage(new ErrorMessage(e.getMessage()));
@@ -54,9 +57,9 @@ public class SessionWebSocketHandler extends TextWebSocketHandler {
   public boolean supportsPartialMessages() {
     return false;
   }
-/*
+
   @Override
   public List<String> getSubProtocols() {
     return Collections.singletonList("subprotocol.demo.websocket");
-  }*/
+  }
 }

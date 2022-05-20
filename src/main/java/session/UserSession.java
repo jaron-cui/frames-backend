@@ -4,8 +4,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import util.Data;
 import web.message.IncomingMessage;
-import web.message.common.Assignment;
 import web.message.OutgoingMessage;
+import web.message.common.Assignment;
 
 import java.io.IOException;
 
@@ -30,15 +30,15 @@ public class UserSession {
 
   public void putInRoom(Room room) {
     if (this.room != null) {
-      this.room.removePlayer(this);
+      this.room.removeUser(this);
     }
 
+    if (room == null) {
+      this.sendMessage(new Assignment(null));
+    } else {
+      room.addUser(this);
+    }
     this.room = room;
-    if (this.room != null) {
-      this.room.addPlayer(this);
-    }
-
-    this.sendMessage(new Assignment(this.room));
   }
 
   public void kick() {
@@ -55,11 +55,12 @@ public class UserSession {
   }
 
   public void acceptMessage(IncomingMessage message) {
-    this.room.handleCustomMessage(message);
+    message.setSender(this);
+    this.room.handleMessage(message);
   }
 
   public void close() {
-    this.room.removePlayer(this);
+    this.room.removeUser(this);
     SessionManager.getInstance().removeSession(this);
     try {
       this.session.close();

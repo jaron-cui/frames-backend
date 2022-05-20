@@ -4,6 +4,9 @@ import util.Data;
 import util.FieldProvider;
 import web.message.IncomingMessage;
 import web.message.OutgoingMessage;
+import web.message.common.Assignment;
+import web.message.common.PlayerJoined;
+import web.message.common.PlayerLeft;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,20 +22,20 @@ public abstract class Room implements Iterable<UserSession>, FieldProvider {
 
   private final String type;
   private final String id;
-  private final List<UserSession> players;
+  private final List<UserSession> users;
 
   protected Room(String type) {
     this(type, new ArrayList<>());
   }
 
-  protected Room(String type, List<UserSession> players) {
+  protected Room(String type, List<UserSession> users) {
     this.type = type;
     this.id = UUID.randomUUID().toString();
-    this.players = new ArrayList<>();
+    this.users = new ArrayList<>();
 
     RoomManager.getInstance().addRoom(this);
-    for (UserSession player : players) {
-      player.putInRoom(this);
+    for (UserSession user : users) {
+      user.putInRoom(this);
     }
   }
 
@@ -44,24 +47,28 @@ public abstract class Room implements Iterable<UserSession>, FieldProvider {
     return this.id;
   }
 
-  public List<UserSession> getPlayers() {
-    return new ArrayList<>(this.players);
+  public List<UserSession> getUsers() {
+    return new ArrayList<>(this.users);
   }
 
   public void close() {
-    for (UserSession player : this) {
-      if (player.getRoom() == this) {
-        player.kick();
+    for (UserSession user : this) {
+      if (user.getRoom() == this) {
+        user.kick();
       }
     }
 
     RoomManager.getInstance().removeRoom(this.id);
   }
 
-  protected static void messagePlayers(Collection<UserSession> players, OutgoingMessage message) {
-    for (UserSession player : players) {
+  protected static void messageUsers(Collection<UserSession> users, OutgoingMessage message) {
+    for (UserSession player : users) {
       player.sendMessage(message);
     }
+  }
+
+  protected void messageAll(OutgoingMessage message) {
+    messageUsers(this.users, message);
   }
 
   public void handleMessage(IncomingMessage message) {
@@ -81,32 +88,29 @@ public abstract class Room implements Iterable<UserSession>, FieldProvider {
 
   protected abstract void handleCustomMessage(IncomingMessage message);
 
-  protected void addPlayer(UserSession player) {
-    this.players.add(player);
-    this.onPlayerJoin(player);
+  protected void addUser(UserSession user) {
+    messageAll(new PlayerJoined(user));
+    this.users.add(user);
+    user.sendMessage(new Assignment(this));
   }
 
-  protected void removePlayer(UserSession player) {
-    this.players.remove(player);
-    this.onPlayerLeave(player);
+  protected void removeUser(UserSession user) {
+    this.users.remove(user);
+    messageAll(new PlayerLeft(user));
   }
-
-  protected abstract void onPlayerJoin(UserSession player);
-
-  protected abstract void onPlayerLeave(UserSession player);
 
   @Override
   public Map<String, Object> retrieveFields() {
     Map<String, Object> fields = new HashMap<>();
     fields.put("type", this.type);
     fields.put("id", this.id);
-    fields.put("players", Data.map(this.players, UserSession::getId));
+    fields.put("players", Data.map(this.users, UserSession::getId));
 
     return fields;
   }
 
   @Override
   public Iterator<UserSession> iterator() {
-    return new ArrayList<>(this.players).iterator();
+    return new ArrayList<>(this.users).iterator();
   }
 }

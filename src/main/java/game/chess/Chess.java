@@ -14,7 +14,7 @@ import util.Data;
 import web.message.IncomingMessage;
 import web.message.OutgoingMessage;
 import web.message.common.ErrorMessage;
-import web.message.common.PlayerTurnMessage;
+import web.message.common.PlayerTurn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,8 +67,8 @@ public class Chess extends TwoPlayerGame {
             try {
               this.model.move(this.getTurnColor(), move.getFrom(), move.getTo());
               this.whiteMove = !this.whiteMove;
-              messagePlayers(this.getPlayers(), new MoveMessage(move.getFrom(), move.getTo()));
-              messagePlayers(this.getPlayers(), new PlayerTurnMessage(this.getTurnPlayer()));
+              messageUsers(this.getUsers(), new MoveMessage(move.getFrom(), move.getTo()));
+              messageUsers(this.getUsers(), new PlayerTurn(this.getTurnPlayer()));
             } catch (IllegalMoveException e) {
               // TODO: something
               message.getSender().sendMessage(new ErrorMessage(e.getMessage()));
@@ -80,16 +80,6 @@ public class Chess extends TwoPlayerGame {
         default:
           System.out.println("Got weird message: " + message.getType());
       }
-    }
-
-    @Override
-    protected void onPlayerJoin(UserSession player) {
-
-    }
-
-    @Override
-    protected void onPlayerLeave(UserSession player) {
-
     }
 /*
     @Override
